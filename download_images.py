@@ -29,3 +29,10 @@ def download_galaxy_image(objid: str, ra: float, dec: float, output_dir: str) ->
 
     if os.path.exists(out_path):
         return True
+    
+
+        url = (
+        f"{SDSS_CUTOUT_URL}"
+        f"?ra={ra}&dec={dec}&scale={SCALE}"
+        f"&width={WIDTH}&height={HEIGHT}"
+    )

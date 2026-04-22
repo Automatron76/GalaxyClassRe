@@ -66,3 +66,26 @@ def download_galaxy_image(objid: str, ra: float, dec: float, output_dir: str) ->
 
         # Read only the first N rows from the labels CSV
         df = pd.read_csv(LABELS_PATH, dtype={"id": "string"}).head(args.limit)
+
+        downloaded = 0
+        failed = 0
+
+    for i, row in df.iterrows():
+        objid = row["id"]
+        ra = float(row["ra"])
+        dec = float(row["dec"])
+
+        ok = download_galaxy_image(objid, ra, dec, IMAGES_DIR)
+
+        if ok:
+            downloaded += 1
+        else:
+            failed += 1
+
+        sleep(REQUEST_DELAY)
+
+    print(f"Done. Downloaded: {downloaded}, failed: {failed}")
+
+
+    if __name__ == "__main__":
+        main()

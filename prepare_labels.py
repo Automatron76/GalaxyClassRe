@@ -55,3 +55,14 @@ def main():
     df["q2_label_name"] = df[q2_cols].idxmax(axis=1)
     q2_map = {"prob_edge_on": 0, "prob_not_edge_on": 1}
     df["q2_label"] = df["q2_label_name"].map(q2_map)
+
+    df.to_csv(LABELS_PATH, index=False)
+
+    print(f"Saved labels for Q1 + Q2 → {LABELS_PATH}")
+    print(f"  Total galaxies : {len(df):,}")
+    print(f"  Q1 distribution: {df['q1_label'].value_counts().to_dict()}")
+    print(f"  Q2 distribution: {df['q2_label'].value_counts().to_dict()}")
+
+
+if __name__ == "__main__":
+    main()

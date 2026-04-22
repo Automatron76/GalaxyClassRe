@@ -10,7 +10,7 @@ LABELS_PATH = "data/interim/labels_q1_q2.csv"
 IMAGES_DIR = "data/processed/train"
 
 
-# Model — used by GalaxyClassifier   Source: https://docs.pytorch.org/vision/stable/models.html
+# Model — used by GalaxyClassifier   Source: https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.resnet18.html
 IMG_SIZE = 224
 DEVICE = "cpu"
 IMAGENET_MEAN = [0.485, 0.456, 0.406]

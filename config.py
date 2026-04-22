@@ -1,6 +1,7 @@
 """
 Shared configuration for the Galaxy Classifier project.
 """
+from torchvision import transforms
 
 # Paths — used by prepare_labels.py
 RAW_CATALOG_PATH = "data/raw/gz2_hart16.csv.gz"
@@ -15,3 +16,24 @@ IMG_SIZE = 224
 DEVICE = "cpu"
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
+
+
+# Image transforms — added after deciding to use ResNet18
+# Source: https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html
+train_transform = transforms.Compose([
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+])
+
+val_transform = transforms.Compose([
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+])
+
+# Training split settings
+VAL_SPLIT = 0.20
+SEED = 42

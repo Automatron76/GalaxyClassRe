@@ -6,6 +6,13 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torch import nn
 from torchvision import models
+from torch.utils.data import Dataset, DataLoader, Subset
+import torch
+
+from config import (
+    LABELS_PATH, IMAGES_DIR, VAL_SPLIT, SEED,
+    train_transform, val_transform,
+)
 
 class GalaxyDataset(Dataset):
 
@@ -45,3 +52,25 @@ class GalaxyDataset(Dataset):
     def forward(self, x):
         features = self.backbone(x)
         return self.head_q1(features), self.head_q2(features)
+    
+    
+    
+    def make_loaders(batch_size):
+        train_ds = GalaxyDataset(LABELS_PATH, IMAGES_DIR, transform=train_transform)
+        val_ds   = GalaxyDataset(LABELS_PATH, IMAGES_DIR, transform=val_transform)
+
+        n_total = len(train_ds)
+        n_val   = max(1, int(n_total * VAL_SPLIT))
+        n_train = n_total - n_val
+
+        indices = torch.randperm(n_total, generator=torch.Generator().manual_seed(SEED))
+
+        train_loader = DataLoader(
+        Subset(train_ds, indices[:n_train].tolist()),
+        batch_size=batch_size, shuffle=True, num_workers=0,
+        )
+        val_loader = DataLoader(
+            Subset(val_ds, indices[n_train:].tolist()),
+            batch_size=batch_size, shuffle=False, num_workers=0,
+    )
+        return train_loader, val_loader, n_train, n_val

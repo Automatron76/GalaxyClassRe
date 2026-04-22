@@ -14,6 +14,11 @@ https://skyserver.sdss.org/dr14/SkyServerWS/ImgCutout/getjpeg
 """
 import os
 import requests
+import argparse
+import pandas as pd
+from time import sleep
+from config import LABELS_PATH, IMAGES_DIR
+
 # SDSS SkyServer Image Cutout endpoint (Data Release 14) https://skyserver.sdss.org/dr14/en/help/docs/api.aspx
 SDSS_CUTOUT_URL = "https://skyserver.sdss.org/dr14/SkyServerWS/ImgCutout/getjpeg"
 
@@ -49,3 +54,15 @@ def download_galaxy_image(objid: str, ra: float, dec: float, output_dir: str) ->
     except Exception as e:
         print(f"Error: {e}")
         return False
+    
+    def main():
+        # Set up --limit argument, default 5000
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--limit", type=int, default=5000)
+        args = parser.parse_args()
+
+        # Create images folder if it doesn't exist
+        os.makedirs(IMAGES_DIR, exist_ok=True)
+
+        # Read only the first N rows from the labels CSV
+        df = pd.read_csv(LABELS_PATH, dtype={"id": "string"}).head(args.limit)

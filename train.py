@@ -4,6 +4,8 @@ import os
 import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
+from torch import nn
+from torchvision import models
 
 class GalaxyDataset(Dataset):
 
@@ -25,3 +27,21 @@ class GalaxyDataset(Dataset):
         if self.transform:
             img = self.transform(img)    # apply transform pipeline if provided
         return img, int(row["q1_label"]), int(row["q2_label"])    # return image and both labels
+    
+
+    class GalaxyClassifier(nn.Module):
+
+     def __init__(self, pretrained=True):
+        super().__init__()
+        weights = models.ResNet18_Weights.IMAGENET1K_V1 if pretrained else None
+        backbone = models.resnet18(weights=weights)
+        num_features = backbone.fc.in_features  # 512
+        backbone.fc = nn.Identity()
+
+        self.backbone = backbone
+        self.head_q1 = nn.Linear(num_features, 3)  # smooth / features / star
+        self.head_q2 = nn.Linear(num_features, 2)  # edge-on / not edge-on
+
+    def forward(self, x):
+        features = self.backbone(x)
+        return self.head_q1(features), self.head_q2(features)

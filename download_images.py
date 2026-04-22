@@ -1,0 +1,23 @@
+"""
+Download SDSS galaxy cutout images.
+
+For each galaxy in the labels CSV file, this script requests a 256×256 px
+JPEG cutout from the SDSS SkyServer DR14 Image Cutout API using the
+galaxy's RA/Dec coordinates.
+
+So in the .gz file we have technical data and in the SDSS SkyServer we have
+the corresponding images of that data.
+
+Image source: SDSS SkyServer DR14 Image Cutout API
+https://skyserver.sdss.org/dr14/SkyServerWS/ImgCutout/getjpeg
+
+"""
+import os
+
+# SDSS SkyServer Image Cutout endpoint (Data Release 14) https://skyserver.sdss.org/dr14/en/help/docs/api.aspx
+SDSS_CUTOUT_URL = "https://skyserver.sdss.org/dr14/SkyServerWS/ImgCutout/getjpeg"
+
+# Image parameters from the SDSS SkyServer API documentatio
+SCALE = 0.2        # arcseconds per pixel
+WIDTH = 256        # pixels
+HEIGHT = 256       # pixels

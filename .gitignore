@@ -1,0 +1,8 @@
+data/raw/
+data/interim/
+data/processed/
+data/artifacts/
+__pycache__/
+*.pyc
+.venv/
+*.pth

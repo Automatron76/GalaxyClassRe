@@ -38,9 +38,15 @@ RENAME_MAP = {
 }
 
 def main():
+
     df = pd.read_csv(
         RAW_CATALOG_PATH,
         usecols=RAW_COLUMNS,
         dtype={"dr7objid": "string"},
     )
     df = df.rename(columns=RENAME_MAP)
+
+    q1_cols = ["prob_smooth", "prob_features_or_disk", "prob_star_or_artifact"]
+    df["q1_label_name"] = df[q1_cols].idxmax(axis=1)
+    q1_map = {"prob_smooth": 0, "prob_features_or_disk": 1, "prob_star_or_artifact": 2}
+    df["q1_label"] = df["q1_label_name"].map(q1_map)

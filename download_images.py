@@ -21,3 +21,11 @@ SDSS_CUTOUT_URL = "https://skyserver.sdss.org/dr14/SkyServerWS/ImgCutout/getjpeg
 SCALE = 0.2        # arcseconds per pixel
 WIDTH = 256        # pixels
 HEIGHT = 256       # pixels
+
+REQUEST_DELAY = 0.3
+
+def download_galaxy_image(objid: str, ra: float, dec: float, output_dir: str) -> bool:
+    out_path = os.path.join(output_dir, f"{objid}.jpg")
+
+    if os.path.exists(out_path):
+        return True

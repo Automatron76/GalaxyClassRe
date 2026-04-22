@@ -13,7 +13,7 @@ https://skyserver.sdss.org/dr14/SkyServerWS/ImgCutout/getjpeg
 
 """
 import os
-
+import requests
 # SDSS SkyServer Image Cutout endpoint (Data Release 14) https://skyserver.sdss.org/dr14/en/help/docs/api.aspx
 SDSS_CUTOUT_URL = "https://skyserver.sdss.org/dr14/SkyServerWS/ImgCutout/getjpeg"
 
@@ -31,8 +31,21 @@ def download_galaxy_image(objid: str, ra: float, dec: float, output_dir: str) ->
         return True
     
 
-        url = (
+    url = (
         f"{SDSS_CUTOUT_URL}"
         f"?ra={ra}&dec={dec}&scale={SCALE}"
         f"&width={WIDTH}&height={HEIGHT}"
     )
+        
+    try:
+        response = requests.get(url, timeout=10)
+
+        if response.status_code == 200:
+            with open(out_path, "wb") as f:
+                f.write(response.content)
+            return True
+        return False
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return False

@@ -50,3 +50,8 @@ def main():
     df["q1_label_name"] = df[q1_cols].idxmax(axis=1)
     q1_map = {"prob_smooth": 0, "prob_features_or_disk": 1, "prob_star_or_artifact": 2}
     df["q1_label"] = df["q1_label_name"].map(q1_map)
+
+    q2_cols = ["prob_edge_on", "prob_not_edge_on"]
+    df["q2_label_name"] = df[q2_cols].idxmax(axis=1)
+    q2_map = {"prob_edge_on": 0, "prob_not_edge_on": 1}
+    df["q2_label"] = df["q2_label_name"].map(q2_map)

@@ -36,3 +36,11 @@ RENAME_MAP = {
     "t02_edgeon_a04_yes_debiased":                           "prob_edge_on",
     "t02_edgeon_a05_no_debiased":                            "prob_not_edge_on",
 }
+
+def main():
+    df = pd.read_csv(
+        RAW_CATALOG_PATH,
+        usecols=RAW_COLUMNS,
+        dtype={"dr7objid": "string"},
+    )
+    df = df.rename(columns=RENAME_MAP)

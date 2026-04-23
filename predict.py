@@ -41,3 +41,28 @@ def predict(image_path):
     q2_probs = {Q2_CLASSES[i]: float(probs_q2[i]) for i in Q2_CLASSES}
 
     return q1_label, q1_probs, q2_label, q2_probs
+
+
+import argparse
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("image", nargs="?", default=None)
+    args = parser.parse_args()
+
+    if args.image:
+        img_path = args.image
+    else:
+        files = [f for f in os.listdir(IMAGES_DIR) if f.lower().endswith(".jpg")]
+        img_path = os.path.join(IMAGES_DIR, files[0])
+
+    q1_label, q1_probs, q2_label, q2_probs = predict(img_path)
+
+    print(f"Image : {img_path}\n")
+    print(f"Q1 – Galaxy shape: {q1_label}")
+    for name, p in q1_probs.items():
+        print(f"    {name:20s}: {p:.3f}")
+
+    print(f"\nQ2 – Edge-on?: {q2_label}")
+    for name, p in q2_probs.items():
+        print(f"    {name:20s}: {p:.3f}")

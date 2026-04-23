@@ -103,3 +103,25 @@ def train(epochs, batch_size):
             total += bs
             ok_q1 += (logits_q1.argmax(1) == lbl_q1).sum().item()
             ok_q2 += (logits_q2.argmax(1) == lbl_q2).sum().item()
+            
+            model.eval()
+        v_ok_q1, v_ok_q2, v_total = 0, 0, 0
+
+        with torch.inference_mode():
+            for images, lbl_q1, lbl_q2 in val_loader:
+                images = images.to(DEVICE)
+                lbl_q1 = lbl_q1.to(DEVICE)
+                lbl_q2 = lbl_q2.to(DEVICE)
+
+                logits_q1, logits_q2 = model(images)
+                bs = images.size(0)
+                v_total += bs
+                v_ok_q1 += (logits_q1.argmax(1) == lbl_q1).sum().item()
+                v_ok_q2 += (logits_q2.argmax(1) == lbl_q2).sum().item()
+
+        print(
+            f"  Epoch {epoch}/{epochs}  |  "
+            f"loss {running_loss / total:.4f}  |  "
+            f"train Q1 {ok_q1/total:.3f}  Q2 {ok_q2/total:.3f}  |  "
+            f"val Q1 {v_ok_q1/v_total:.3f}  Q2 {v_ok_q2/v_total:.3f}"
+        )

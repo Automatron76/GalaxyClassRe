@@ -44,3 +44,7 @@ EPOCHS = 8
 LEARNING_RATE = 1e-4
 ARTIFACTS_DIR = "data/artifacts"
 MODEL_WEIGHTS = "galaxy_classifier.pth"
+
+# Class labels — used by predict.py
+Q1_CLASSES = {0: "smooth", 1: "features or disk", 2: "star or artifact"}
+Q2_CLASSES = {0: "edge-on", 1: "not edge-on"}

@@ -4,14 +4,14 @@ import os
 import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
-from torch import nn
+from torch import nn, optim
 from torchvision import models
 from torch.utils.data import Dataset, DataLoader, Subset
 import torch
 
 from config import (
-    LABELS_PATH, IMAGES_DIR, VAL_SPLIT, SEED,
-    train_transform, val_transform,
+    LABELS_PATH, IMAGES_DIR, VAL_SPLIT, SEED,BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE,
+    ARTIFACTS_DIR, MODEL_WEIGHTS,train_transform, val_transform,
 )
 
 class GalaxyDataset(Dataset):
@@ -36,7 +36,7 @@ class GalaxyDataset(Dataset):
         return img, int(row["q1_label"]), int(row["q2_label"])    # return image and both labels
     
 
-    class GalaxyClassifier(nn.Module):
+class GalaxyClassifier(nn.Module):
 
      def __init__(self, pretrained=True):
         super().__init__()
@@ -49,13 +49,13 @@ class GalaxyDataset(Dataset):
         self.head_q1 = nn.Linear(num_features, 3)  # smooth / features / star
         self.head_q2 = nn.Linear(num_features, 2)  # edge-on / not edge-on
 
-    def forward(self, x):
+def forward(self, x):
         features = self.backbone(x)
         return self.head_q1(features), self.head_q2(features)
     
     
     
-    def make_loaders(batch_size):
+def make_loaders(batch_size):
         train_ds = GalaxyDataset(LABELS_PATH, IMAGES_DIR, transform=train_transform)
         val_ds   = GalaxyDataset(LABELS_PATH, IMAGES_DIR, transform=val_transform)
 
@@ -74,3 +74,13 @@ class GalaxyDataset(Dataset):
             batch_size=batch_size, shuffle=False, num_workers=0,
     )
         return train_loader, val_loader, n_train, n_val
+    
+
+def train(epochs, batch_size):
+     train_loader, val_loader, n_train, n_val = make_loaders(batch_size)
+     print(f"Device: {DEVICE}  |  train: {n_train}  val: {n_val}\n")
+
+     model = GalaxyClassifier(pretrained=True).to(DEVICE)
+     criterion_q1 = nn.CrossEntropyLoss()
+     criterion_q2 = nn.CrossEntropyLoss()
+     optimizer = optim.AdamW(model.parameters(), lr=LEARNING_RATE)

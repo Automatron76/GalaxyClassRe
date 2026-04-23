@@ -125,3 +125,19 @@ def train(epochs, batch_size):
             f"train Q1 {ok_q1/total:.3f}  Q2 {ok_q2/total:.3f}  |  "
             f"val Q1 {v_ok_q1/v_total:.3f}  Q2 {v_ok_q2/v_total:.3f}"
         )
+    os.makedirs(ARTIFACTS_DIR, exist_ok=True)
+    path = os.path.join(ARTIFACTS_DIR, MODEL_WEIGHTS)
+    torch.save(model.state_dict(), path)
+    print(f"Model saved → {path}")
+        
+        
+
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--epochs", type=int, default=EPOCHS)
+    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
+    args = parser.parse_args()
+    train(epochs=args.epochs, batch_size=args.batch_size)

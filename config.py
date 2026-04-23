@@ -37,3 +37,10 @@ val_transform = transforms.Compose([
 # Training split settings
 VAL_SPLIT = 0.20
 SEED = 42
+
+# Training hyperparameters — used by train function
+BATCH_SIZE = 32
+EPOCHS = 8
+LEARNING_RATE = 1e-4
+ARTIFACTS_DIR = "data/artifacts"
+MODEL_WEIGHTS = "galaxy_classifier.pth"

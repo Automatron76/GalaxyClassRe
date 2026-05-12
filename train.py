@@ -104,7 +104,7 @@ def train(epochs, batch_size):
             ok_q1 += (logits_q1.argmax(1) == lbl_q1).sum().item()
             ok_q2 += (logits_q2.argmax(1) == lbl_q2).sum().item()
             
-            model.eval()
+        model.eval()
         v_ok_q1, v_ok_q2, v_total = 0, 0, 0
 
         with torch.inference_mode():
